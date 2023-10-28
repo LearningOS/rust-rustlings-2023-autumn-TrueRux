@@ -30,11 +30,13 @@
 
 extern "Rust" {
     fn my_demo_function(a: u32) -> u32;
+    #[link_name = "my_demo_function"]
     fn my_demo_function_alias(a: u32) -> u32;
 }
 
 mod Foo {
     // No `extern` equals `extern "Rust"`.
+    #[no_mangle]
     pub fn my_demo_function(a: u32) -> u32 {
         a
     }
@@ -46,14 +48,6 @@ mod tests {
 
     #[test]
     fn test_success() {
-        fn my_demo_function(a: u32) -> u32 {
-            Foo::my_demo_function(a)
-        }
-
-        fn my_demo_function_alias(a: u32) -> u32 {
-            Foo::my_demo_function(a)
-        }
-
         // The externally imported functions are UNSAFE by default
         // because of untrusted source of other languages. You may
         // wrap them in safe Rust APIs to ease the burden of callers.
